@@ -1,10 +1,15 @@
 #include "Bookshelf.h"
 
+Bookshelf::Bookshelf()
+{
+	load_from_file();
+}
+
 vector<Book*> &Bookshelf::get_books()
 {
 	return this->books;
 }
-Book& Bookshelf::get_book_at(unsigned int index)
+Book &Bookshelf::get_book_at(unsigned int index)
 {
 	Book* book = this->books.at(index);
 	if (book == nullptr) return *(Book*)NULL; // позволяет вернуть nullptr по ссылке
@@ -18,7 +23,7 @@ Book Bookshelf::create_book(string name)
 	Book book = Book(last_book_id++, name);
 	return book;
 }
-bool Bookshelf::add_book(Book &book)
+bool Bookshelf::add_book(Book book)
 {
 	this->books.push_back(&book);
 	return true;

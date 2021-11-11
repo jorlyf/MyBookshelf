@@ -13,6 +13,8 @@ private:
 	void load_from_file();
 
 public:
+	Bookshelf();
+
 	vector<Book*> &get_books();
 	Book &get_book_at(unsigned int index);
 	Book &get_book_by_id(unsigned int value);
@@ -30,7 +32,7 @@ public:
 	void sort_books_by_created_date();
 
 	Book create_book(string name);
-	bool add_book(Book& book);
+	bool add_book(Book book);
 	bool delete_book(Book& book);
 	bool delete_book(unsigned int id);
 };

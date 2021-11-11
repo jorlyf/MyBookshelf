@@ -56,7 +56,7 @@ void Console::run()
 			if (answer == "да") bookshelf.add_book(book);
 			else if (answer == "нет") break;
 			else goto inp;
-			
+
 			break;
 		}
 		case '4':
@@ -95,7 +95,7 @@ void Console::print_hello()
 {
 	cout << "Добро пожаловать в Вашу книжкую полку!" << endl;
 }
-void Console::print_books(vector<Book*> &books)
+void Console::print_books(vector<Book*>& books)
 {
 	if (!is_have_books(books)) { cout << "У вас нет ни одной книги!" << endl; return; }
 
@@ -104,13 +104,13 @@ void Console::print_books(vector<Book*> &books)
 
 	for (int i = 0; i < books.size(); i++)
 	{
-		Book &book = bookshelf.get_book_at(i);
+		Book& book = bookshelf.get_book_at(i);
 		if (&book == nullptr) continue;
 
 		print_book(book, indents, false);
 	}
 }
-void Console::print_book(Book &book, Indents &indents, bool print_note)
+void Console::print_book(Book& book, Indents& indents, bool print_note)
 {
 	printf("%-*i", indents.id, book.get_id());
 	printf("%-*s", indents.name, book.get_name().c_str());
@@ -120,7 +120,7 @@ void Console::print_book(Book &book, Indents &indents, bool print_note)
 	printf("%-*s\n", indents.created_date, book.get_created_date().c_str());
 	if (print_note) printf("%s\n", book.get_note().c_str());
 }
-void Console::print_only_one_book(Book &book, Indents &indents)
+void Console::print_only_one_book(Book& book, Indents& indents)
 {
 	print_header(indents);
 	printf("%-*i", indents.id, book.get_id());
@@ -131,7 +131,7 @@ void Console::print_only_one_book(Book &book, Indents &indents)
 	printf("%-*s\n", indents.created_date, book.get_created_date().c_str());
 	printf("%s\n", book.get_note().c_str());
 }
-void Console::print_header(Indents &indents)
+void Console::print_header(Indents& indents)
 {
 	printf("%-*s", indents.id, "id");
 	printf("%-*s", indents.name, "Название");
