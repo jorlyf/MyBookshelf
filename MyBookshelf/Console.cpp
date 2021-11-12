@@ -4,9 +4,6 @@
 
 void Console::run()
 {
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
-	setlocale(LC_ALL, "rus");
 	print_hello();
 
 	while (true)
@@ -70,10 +67,19 @@ void Console::run()
 		case 27:
 			cout << "ESC" << endl; // вывод выбора
 			cout << "До встречи!" << endl;
-			exit(0);
+			return;
+		default:
+			cout << "Нет такой команды!" << endl;
+			break;
 		}
 	}
 
+}
+void Console::set_ru()
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	setlocale(LC_ALL, "rus");
 }
 
 void Console::print_menu()

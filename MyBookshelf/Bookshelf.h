@@ -1,16 +1,28 @@
 #pragma once
 #include "Book.h"
 #include <vector>
+#include <fstream>
+#include <iostream>
+#include "Settings.h"
 
 using namespace std;
 
-class Bookshelf
+class Bookshelf // основная модель данных
 {
 private:
-	vector<Book*> books;
+	vector<Book*> books;   // вектор с объектами книг
+	ofstream ofs;          // запись в файл
+	ifstream ifs;          // чтение из файла
 	unsigned int last_book_id;
 
-	void load_from_file();
+	template <typename T>
+	void read_file(vector<T>& vector, string path, ifstream::openmode mode);
+
+	template <typename T>
+	void write_file(vector<T>& vector, string path, ofstream::openmode mode);
+
+	template <typename T>
+	void write_file(T& object, string path, ofstream::openmode mode);
 
 public:
 	Bookshelf();
@@ -32,7 +44,11 @@ public:
 	void sort_books_by_created_date();
 
 	Book create_book(string name);
-	bool add_book(Book book);
+	bool add_book(Book& book);
 	bool delete_book(Book& book);
 	bool delete_book(unsigned int id);
+
+	void save();
+	
+	// сохранение данных
 };

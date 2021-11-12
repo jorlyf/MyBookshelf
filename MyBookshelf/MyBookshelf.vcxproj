@@ -150,6 +150,7 @@
     <ClInclude Include="Book.h" />
     <ClInclude Include="Bookshelf.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="Settings.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
