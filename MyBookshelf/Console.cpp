@@ -4,24 +4,36 @@
 
 void Console::run()
 {
-	print_hello();
+	print_hello(); // приветствие
 
 	while (true)
 	{
 		print_menu();
 		key = _getch();
 
-		if (key != 27) // 27 = "ESC", его неправильно выводит
+		if (key != 27) // 27 - это "ESC", его неправильно выводит
 			cout << key << endl;
 
 		switch (key)
 		{
-		case '1':
+		case '1':        // список книг
+		{
 			print_books(bookshelf.get_books());
 			break;
-		case '2':
+		}
+		case '2':        // получить информацию о книге
+		{
+			cout << "¬ведите id книги, про которую хотите найти больше информации, либо нажмите Enter дл€ выхода: ";
+			unsigned int id = Utils::get_int();
+			if (id == 0) break; // нажатие Enter
+
+			Book& book = bookshelf.get_book_by_id(id);
+			if (&book == nullptr) { cout << "“акой книги не существует!" << endl; break; }
+
+			print_only_one_book(book);
 			break;
-		case '3':
+		}
+		case '3':        // добавить книгу
 		{
 			cout << "¬ведите название книги, либо нажмите Enter дл€ выхода: ";
 			string name = Utils::get_string(40);
@@ -37,7 +49,7 @@ void Console::run()
 			string genre = Utils::get_string(40);
 			book.set_genre(genre);
 
-			cout << "¬ведите рейтинг книги(1-10), либо введите 0 дл€ пропуска: ";
+			cout << "¬ведите рейтинг книги(1-10), либо нажмите Enter дл€ пропуска: ";
 			short rating = Utils::get_int(1, 10);
 			book.set_rating(rating);
 
@@ -45,32 +57,111 @@ void Console::run()
 			string note = Utils::get_string(1024);
 			book.set_note(note);
 
-			Indents indents = Utils::get_print_indents(book);
-			print_only_one_book(book, indents);
-		inp:
-			cout << "¬ы действительно хотите сохранить данную книгу в своей библиотеке?(да/нет)" << endl;
-			string answer = Utils::get_string(10);
-			if (answer == "да") bookshelf.add_book(book);
-			else if (answer == "нет") break;
-			else goto inp;
+			print_only_one_book(book);
+
+			string answer;
+			do {
+				cout << "¬ы действительно хотите сохранить данную книгу в своей библиотеке?(да/нет)" << endl;
+				string answer = Utils::get_lower_case_string(Utils::get_string(10));
+				if (answer == "да") { bookshelf.add_book(book); break; }
+				else if (answer == "нет") break;
+			} while (answer != "нет" || answer != "да");
 
 			break;
 		}
-		case '4':
+		case '4':        // редактировать книг
+		{
+			cout << "¬ведите id книги, которую хотите отредактировать, либо нажмите Enter дл€ выхода: ";
+			unsigned int id = Utils::get_int();
+			if (id == 0) break; // нажатие Enter
+
+			Book& book = bookshelf.get_book_by_id(id);
+			if (&book == nullptr) { cout << "“акой книги не существует!" << endl; break; }
+
+			print_only_one_book(book);
+
+			short prop;
+			do {
+				cout << "\n1 - Ќазвание, 2 - јвтор, 3 - жанр, 4 - рейтинг, 5 - запись о книге" << endl;
+				cout << "¬ыберите, что хотите изменить, либо нажмите Enter дл€ выхода: ";
+				prop = Utils::get_int(0, 5);
+				if (prop == 0) break;
+
+				cout << "¬ведите новое значение: ";
+				switch (prop)
+				{
+				case 1:
+				{
+					string name = Utils::get_string(40);
+					book.set_name(name);
+					break;
+				}
+				case 2:
+				{
+					string author = Utils::get_string(40);
+					book.set_author(author);
+					break;
+				}
+				case 3:
+				{
+					string genre = Utils::get_string(25);
+					book.set_genre(genre);
+					break;
+				}
+				case 4:
+				{
+					short rating = Utils::get_int(1, 10);
+					book.set_rating(rating);
+					break;
+				}
+				case 5:
+				{
+					string note = Utils::get_string(1024);
+					book.set_note(note);
+					break;
+				}
+
+				}
+			} while (prop != 0);
+			bookshelf.save(); // сохранение изменений
 			break;
-		case '5':
+		}
+		case '5':        // удалить книги
+		{
+			cout << "¬ведите id книги, которую желаете удалить, либо нажмите Enter дл€ выхода: ";
+			unsigned int id = Utils::get_int();
+			if (id == 0) break; // нажатие Enter
+
+			Book& book = bookshelf.get_book_by_id(id);
+			if (&book == nullptr) { cout << "“акой книги не существует!" << endl; break; }
+
+			print_only_one_book(book);
+
+			string answer;
+			do {
+				cout << "¬ы действительно хотите удалить данную книгу из своей библиотеке?(да/нет)" << endl;
+				string answer = Utils::get_lower_case_string(Utils::get_string(10));
+				if (answer == "да") { bookshelf.delete_book(book); break; }
+				else if (answer == "нет") break;
+			} while (answer != "нет" || answer != "да");
+
 			break;
-		case '6':
+		}
+		case '6':        // сортировать список книг
 			break;
-		case '0':
+		case '0':        // справка
 			break;
-		case 27:
+		case 27:         // выход
+		{
 			cout << "ESC" << endl; // вывод выбора
 			cout << "ƒо встречи!" << endl;
 			return;
-		default:
+		}
+		default:         // не найдена команда
+		{
 			cout << "Ќет такой команды!" << endl;
 			break;
+		}
 		}
 	}
 
@@ -89,9 +180,9 @@ void Console::print_menu()
 	cout << "1 - показать список книг" << endl;
 	cout << "2 - посмотреть все подробности по книге" << endl;
 	cout << "3 - добавить книгу" << endl;
-	cout << "4 - отредактировать книгу" << endl;
+	cout << "4 - отредактировать книги" << endl;
 	cout << "5 - удалить книгу" << endl;
-	cout << "6 - найти книги по критери€м" << endl;
+	cout << "6 - сортировать книги по критери€м" << endl;
 	cout << "0 - справка" << endl;
 	cout << "ESC - закрыть приложение" << endl;
 	cout << "\n";
@@ -122,20 +213,23 @@ void Console::print_book(Book& book, Indents& indents, bool print_note)
 	printf("%-*s", indents.name, book.get_name().c_str());
 	printf("%-*s", indents.author, book.get_author().c_str());
 	printf("%-*s", indents.genre, book.get_genre().c_str());
-	printf("%-*i", indents.rating, book.get_rating());
+	if (book.get_rating() != 0) { printf("%-*i", indents.rating, book.get_rating()); }
+	else // заполн€ю пробелами пространство
+	{
+		string spaces;
+		for (int i = 0; i < indents.rating; i++)
+			spaces += " ";
+		printf(spaces.c_str());
+	}
+
 	printf("%-*s\n", indents.created_date, book.get_created_date().c_str());
 	if (print_note) printf("%s\n", book.get_note().c_str());
 }
-void Console::print_only_one_book(Book& book, Indents& indents)
+void Console::print_only_one_book(Book& book)
 {
+	Indents indents = Utils::get_print_indents(book);
 	print_header(indents);
-	printf("%-*i", indents.id, book.get_id());
-	printf("%-*s", indents.name, book.get_name().c_str());
-	printf("%-*s", indents.author, book.get_author().c_str());
-	printf("%-*s", indents.genre, book.get_genre().c_str());
-	printf("%-*i", indents.rating, book.get_rating());
-	printf("%-*s\n", indents.created_date, book.get_created_date().c_str());
-	printf("%s\n", book.get_note().c_str());
+	print_book(book, indents, true);
 }
 void Console::print_header(Indents& indents)
 {
@@ -144,7 +238,7 @@ void Console::print_header(Indents& indents)
 	printf("%-*s", indents.author, "јвтор");
 	printf("%-*s", indents.genre, "∆анр");
 	printf("%-*s", indents.rating, "–ейтинг");
-	printf("%-*s\n", indents.created_date, "ƒата добавлени€");
+	printf("%-*s\n", indents.created_date, "ƒата занесени€");
 }
 bool Console::is_have_books(vector<Book*>& books)
 {

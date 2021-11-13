@@ -15,26 +15,20 @@ private:
 	ifstream ifs;          // чтение из файла
 	unsigned int last_book_id;
 
-	template <typename T>
-	void read_file(vector<T>& vector, string path, ifstream::openmode mode);
-
-	template <typename T>
-	void write_file(vector<T>& vector, string path, ofstream::openmode mode);
-
-	template <typename T>
-	void write_file(T& object, string path, ofstream::openmode mode);
+	void read_books_file(string path);
+	void write_books_file(string path, ofstream::openmode mode);
 
 public:
 	Bookshelf();
 
-	vector<Book*> &get_books();
-	Book &get_book_at(unsigned int index);
-	Book &get_book_by_id(unsigned int value);
-	Book &get_book_by_name(string value);
-	Book &get_book_by_author(string value);
-	Book &get_book_by_genre(string value);
-	Book &get_book_by_rating(uint8_t value);
-	Book &get_book_by_rating_diaposon(uint8_t startvalue, uint8_t endvalue);
+	vector<Book*>& get_books();
+	Book& get_book_at(unsigned int index);
+	Book& get_book_by_id(unsigned int value);
+	Book& get_book_by_name(string value);
+	Book& get_book_by_author(string value);
+	Book& get_book_by_genre(string value);
+	Book& get_book_by_rating(short value);
+	Book& get_book_by_rating_diaposon(short beginvalue, short endvalue);
 
 	void sort_books_by_id();
 	void sort_books_by_name();
@@ -48,7 +42,5 @@ public:
 	bool delete_book(Book& book);
 	bool delete_book(unsigned int id);
 
-	void save();
-	
-	// сохранение данных
+	void save(); // сохранение данных
 };

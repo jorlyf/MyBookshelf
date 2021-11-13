@@ -17,7 +17,7 @@ private:
 	void print_hello();                                              // вывод приветствия
 	void print_books(vector<Book*> &books);                          // вывод всех книг
 	void print_book(Book &book, Indents &indents, bool print_note);  // вывод книги
-	void print_only_one_book(Book &book, Indents &indents);          // вывод книги с заголовками
+	void print_only_one_book(Book &book);          // вывод книги с заголовками
 	void print_header(Indents &indents);                             // вывод заголовков таблицы книг
 
 	bool is_have_books(vector<Book*> &books);                        // проверить наличие книг

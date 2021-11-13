@@ -1,5 +1,4 @@
 #include "Utils.h"
-#include <iostream>
 
 Indents Utils::get_print_indents(vector<Book*> &books)
 {
@@ -49,23 +48,59 @@ string Utils::get_string(unsigned int max_length)
 int Utils::get_int(unsigned int beginvalue, unsigned int endvalue)
 {
 	int value;
-	cin >> value;
-	clear_cin();
-	cin.get();
-
-	if (value == 0) return 0; // выход
+	istringstream st;
+	string input;
 	 
-	while (value < beginvalue || value > endvalue)
+	while (true)
 	{
-		cout << "Введите число не меньше " << beginvalue << ", но не больше " << endvalue << endl;
-		cin >> value;
+		getline(cin, input);
 		clear_cin();
-		cin.get();
+		st.str(input);
 
-		if (value == 0) return 0; // выход
+		if (input == "")
+			return 0;
+
+		if (st >> value)
+		{
+			if (value > beginvalue && value < endvalue)
+				return value;
+			else
+				cout << "Введите число не меньше " << beginvalue << ", но не больше " << endvalue << endl;
+		}
+
+		else
+			cout << "Некорректный ввод!" << endl;
 	}
+}
+int Utils::get_int()
+{
+	int value;
+	istringstream st;
+	string input;
 
-	return value;
+	while (true)
+	{
+		getline(cin, input);
+		clear_cin();
+		st.str(input);
+
+		if (input == "")
+			return 0;
+
+		if (st >> value)
+			return value;
+
+		else
+			cout << "Некорректный ввод числа!" << endl;
+	}
+}
+string Utils::get_lower_case_string(string value)
+{
+	string newvalue;
+	for (int i = 0; i < value.size(); i++)
+		newvalue.push_back(tolower(value[i]));
+
+	return newvalue;
 }
 void Utils::clear_cin()
 {

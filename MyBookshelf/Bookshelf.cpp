@@ -2,19 +2,86 @@
 
 Bookshelf::Bookshelf()
 {
-	read_file(this->books, Settings.BOOKS_FILENAME, ifstream::in);
+	this->last_book_id = 0;
+	read_books_file(Settings.BOOKS_FILENAME);
 }
 
-vector<Book*> &Bookshelf::get_books()
+vector<Book*>& Bookshelf::get_books()
 {
 	return this->books;
 }
-Book &Bookshelf::get_book_at(unsigned int index)
+Book& Bookshelf::get_book_at(unsigned int index)
 {
 	Book* book = this->books.at(index);
 	if (book == nullptr) return *(Book*)NULL; // позвол€ет вернуть nullptr по ссылке
 
 	return *book;
+}
+Book& Bookshelf::get_book_by_id(unsigned int id)
+{
+	for (int i = 0; i < this->books.size(); i++)
+	{
+		Book* book = this->books.at(i);
+		if (book == nullptr) continue;
+		if (book->get_id() == id)
+			return *book;
+	}
+	return *(Book*)NULL; // позвол€ет вернуть nullptr по ссылке 
+}
+Book& Bookshelf::get_book_by_name(string value)
+{
+	for (int i = 0; i < this->books.size(); i++)
+	{
+		Book* book = this->books.at(i);
+		if (book == nullptr) continue;
+		if (book->get_name() == value)
+			return *book;
+	}
+	return *(Book*)NULL; // позвол€ет вернуть nullptr по ссылке 
+}
+Book& Bookshelf::get_book_by_author(string value)
+{
+	for (int i = 0; i < this->books.size(); i++)
+	{
+		Book* book = this->books.at(i);
+		if (book == nullptr) continue;
+		if (book->get_author() == value)
+			return *book;
+	}
+	return *(Book*)NULL; // позвол€ет вернуть nullptr по ссылке 
+}
+Book& Bookshelf::get_book_by_genre(string value)
+{
+	for (int i = 0; i < this->books.size(); i++)
+	{
+		Book* book = this->books.at(i);
+		if (book == nullptr) continue;
+		if (book->get_genre() == value)
+			return *book;
+	}
+	return *(Book*)NULL; // позвол€ет вернуть nullptr по ссылке 
+}
+Book& Bookshelf::get_book_by_rating(short value)
+{
+	for (int i = 0; i < this->books.size(); i++)
+	{
+		Book* book = this->books.at(i);
+		if (book == nullptr) continue;
+		if (book->get_rating() == value)
+			return *book;
+	}
+	return *(Book*)NULL; // позвол€ет вернуть nullptr по ссылке 
+}
+Book& Bookshelf::get_book_by_rating_diaposon(short beginvalue, short endvalue)
+{
+	for (int i = 0; i < this->books.size(); i++)
+	{
+		Book* book = this->books.at(i);
+		if (book == nullptr) continue;
+		if (book->get_rating() > beginvalue && book->get_rating() < endvalue)
+			return *book;
+	}
+	return *(Book*)NULL; // позвол€ет вернуть nullptr по ссылке 
 }
 
 
@@ -48,41 +115,31 @@ bool Bookshelf::delete_book(unsigned int id)
 
 void Bookshelf::save()
 {
-	write_file(this->books, Settings.BOOKS_FILENAME, ofstream::trunc);
+	write_books_file(Settings.BOOKS_FILENAME, ofstream::binary);
 }
 
-template <typename T>
-void Bookshelf::read_file(vector<T>& vector, string path, ifstream::openmode mode)
+void Bookshelf::read_books_file(string path)
 {
-	ifs.open(path, mode);
+	ifs.open(path);
 	if (!ifs.is_open()) { cout << "Ќе удалось открыть файл дл€ чтени€!" << endl; return; }
 
-	T pnt;
-	while (ifs.read((char*)&pnt, sizeof(T)))
-		vector.push_back(pnt);
+	Book book;
+	while (ifs.read((char*)&book, sizeof(Book)))
+	{
+		this->books.push_back(new Book(book));
+		this->last_book_id = max(this->last_book_id, book.get_id());
+	}
 
 	ifs.close();
 }
-
-template <typename T>
-void Bookshelf::write_file(vector<T>& vector, string path, ofstream::openmode mode)
+void Bookshelf::write_books_file(string path, ofstream::openmode mode)
 {
 	ofs.open(path, mode);
 	if (!ofs.is_open()) { cout << "Ќе удалось открыть файл дл€ записи!" << endl; return; }
 
-	for (int i = 0; i < vector.size(); i++)
-		ofs.write((char*)vector.at(i), sizeof(T));
+	for (int i = 0; i < this->books.size(); i++)
+		ofs.write((char*)this->books.at(i), sizeof(Book));
 
-	ofs.close();
-}
-
-template <typename T>
-void Bookshelf::write_file(T& object, string path, ofstream::openmode mode)
-{
-	ofs.open(path, mode);
-	if (!ofs.is_open()) { cout << "Ќе удалось открыть файл дл€ записи!" << endl; return; }
-
-	ofs.write((char*)object, sizeof(T));
 
 	ofs.close();
 }

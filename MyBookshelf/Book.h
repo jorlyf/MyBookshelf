@@ -10,17 +10,18 @@ class Book
 {
 private:
 	unsigned int id;
-	char name[40];
-	char author[40];
-	char genre[25];
-	char created_date[50];
-	char note[1024];
-	short rating; // 1 - 10
+	char name[40] = "";
+	char author[40] = "";
+	char genre[25] = "";
+	char created_date[20] = "";
+	char note[1024] = "";
+	short rating = 0; // 1 - 10
 
 	void set_created_date();
 
 public:
 	Book(unsigned int id, string name);
+	Book();
 
 	unsigned int get_id();
 	string get_name();

@@ -6,6 +6,8 @@ Book::Book(unsigned int id, string name)
 	set_name(name);
 	set_created_date();
 }
+Book::Book() = default;
+
 void Book::set_created_date()
 {
 	const time_t now = time(0);
